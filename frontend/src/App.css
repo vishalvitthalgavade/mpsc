@@ -1,0 +1,7 @@
+/* Legacy component stylesheet retained for compatibility.
+   The active visual system is defined in index.css. */
+:root {
+  --accent: #7c3aed;
+  --accent-bg: rgba(124,58,237,.10);
+  --accent-border: rgba(124,58,237,.35);
+}

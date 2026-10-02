@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id           String @id @default(cuid())
+  name         String
+  email        String @unique
+  passwordHash String
+
+  role              UserRole @default(USER)
+  isActive          Boolean  @default(true)
+  mustChangePassword Boolean @default(false)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastLoginAt DateTime?
+  lastSeenAt  DateTime?
+
+  studySessions    StudySession[]
+  activeStudy      ActiveStudySession?
+  completedTopics  CompletedTopic[]
+  pomodoroSettings PomodoroSettings?
+  authSessions     AuthSession[]
+  loginAttempts    LoginAttempt[]
+
+  @@index([role])
+  @@index([isActive])
+  @@index([lastLoginAt])
+  @@index([lastSeenAt])
+  @@map("users")
+}
+
+model StudySession {
+  id          String    @id @default(cuid())
+  clientId    String    @unique
+  userId      String
+  subject     String
+  topic       String
+  duration    Int
+  type        String
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@map("study_sessions")
+}
+
+model ActiveStudySession {
+  id                 String    @id @default(cuid())
+  userId             String    @unique
+  subject            String
+  topic              String
+  type               String
+  startedAt          DateTime
+  pausedAt           DateTime?
+  accumulatedSeconds Int       @default(0)
+  isRunning          Boolean   @default(true)
+  lastHeartbeatAt    DateTime  @default(now())
+  ownerId            String?
+  ownerLabel         String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([isRunning])
+  @@index([lastHeartbeatAt])
+  @@index([ownerId])
+  @@map("active_study_sessions")
+}
+
+model CompletedTopic {
+  id          String    @id @default(cuid())
+  userId      String
+  subject     String
+  unit        String
+  topic       String
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subject, unit, topic])
+  @@index([userId])
+  @@map("completed_topics")
+}
+
+model PomodoroSettings {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  study                   Int      @default(25)
+  shortBreak              Int      @default(5)
+  longBreak               Int      @default(15)
+  sessionsBeforeLongBreak Int      @default(4)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("pomodoro_settings")
+}
+
+model AuthSession {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([revokedAt])
+  @@map("auth_sessions")
+}
+
+model LoginAttempt {
+  id          String   @id @default(cuid())
+  userId      String?
+  email       String
+  successful  Boolean  @default(false)
+  attemptedAt DateTime @default(now())
+  ipAddress   String?
+  userAgent   String?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([email])
+  @@index([attemptedAt])
+  @@index([successful])
+  @@map("login_attempts")
+}

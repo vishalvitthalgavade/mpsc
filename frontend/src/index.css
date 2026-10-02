@@ -1,0 +1,1138 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================================================
+   GATE CSE — Premium UI foundation
+   Presentation-only layer: no application logic lives here.
+   ========================================================= */
+
+:root {
+  --gate-bg: #f6f7fb;
+  --gate-surface: rgba(255,255,255,.88);
+  --gate-surface-solid: #ffffff;
+  --gate-border: rgba(15,23,42,.09);
+  --gate-text: #111827;
+  --gate-muted: #667085;
+  --gate-accent: #7c3aed;
+  --gate-accent-strong: #6d28d9;
+  --gate-accent-soft: rgba(124,58,237,.10);
+  --gate-shadow: 0 18px 50px rgba(15,23,42,.08);
+  --gate-shadow-sm: 0 8px 24px rgba(15,23,42,.06);
+  --gate-radius: 18px;
+  color-scheme: light;
+}
+
+html.dark {
+  --gate-bg: #090d16;
+  --gate-surface: rgba(17,24,39,.82);
+  --gate-surface-solid: #111827;
+  --gate-border: rgba(255,255,255,.075);
+  --gate-text: #f8fafc;
+  --gate-muted: #94a3b8;
+  --gate-accent: #8b5cf6;
+  --gate-accent-strong: #7c3aed;
+  --gate-accent-soft: rgba(139,92,246,.12);
+  --gate-shadow: 0 24px 60px rgba(0,0,0,.28);
+  --gate-shadow-sm: 0 10px 30px rgba(0,0,0,.20);
+  color-scheme: dark;
+}
+
+html, body, #root {
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--gate-bg);
+}
+
+body {
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 12% -10%, rgba(124,58,237,.08), transparent 30%),
+    radial-gradient(circle at 92% 0%, rgba(59,130,246,.055), transparent 26%),
+    var(--gate-bg);
+  color: var(--gate-text);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color .25s ease, color .25s ease;
+}
+
+html.dark body {
+  background:
+    radial-gradient(circle at 12% -10%, rgba(124,58,237,.13), transparent 34%),
+    radial-gradient(circle at 92% 0%, rgba(37,99,235,.08), transparent 30%),
+    var(--gate-bg);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+button, input, select, textarea { font: inherit; }
+
+button, a, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a {
+  transition:
+    transform .18s ease,
+    background-color .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+}
+
+button:active:not(:disabled) { transform: translateY(1px) scale(.985); }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(139,92,246,.35) !important;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(124,58,237,.24);
+  color: inherit;
+}
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(100,116,139,.32);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background-color: rgba(100,116,139,.5); }
+
+/* Application shell */
+.gate-app-shell {
+  min-height: 100vh;
+  background: transparent !important;
+}
+
+.gate-main-content {
+  min-height: calc(100vh - 64px);
+  position: relative;
+}
+
+/* Subtle entrance animation for page content without touching page logic. */
+.gate-page-enter {
+  animation: gate-page-enter .32s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes gate-page-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Common content surfaces. Existing page structure/classes remain unchanged. */
+main .rounded-2xl.border,
+main .rounded-xl.border {
+  border-color: var(--gate-border);
+  box-shadow: var(--gate-shadow-sm);
+}
+
+main .rounded-2xl.border {
+  border-radius: var(--gate-radius);
+}
+
+main .rounded-xl.border {
+  border-radius: 15px;
+}
+
+/* Make existing white/zinc cards feel like one coherent product. */
+main .bg-white {
+  background: var(--gate-surface-solid);
+}
+html.dark main .dark\:bg-zinc-900,
+html.dark main .dark\:bg-zinc-950 {
+  background: rgba(15,23,42,.78);
+}
+
+/* Existing purple primary actions. */
+main button.bg-purple-600,
+main a.bg-purple-600 {
+  background: linear-gradient(135deg, var(--gate-accent), var(--gate-accent-strong));
+  box-shadow: 0 8px 20px rgba(124,58,237,.18);
+}
+main button.bg-purple-600:hover,
+main a.bg-purple-600:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 11px 25px rgba(124,58,237,.25);
+}
+
+/* Inputs: stronger hierarchy and cleaner focus. */
+main input:not([type="checkbox"]):not([type="radio"]),
+main select,
+main textarea {
+  border-color: var(--gate-border);
+  border-radius: 13px;
+  min-height: 44px;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+main input:not([type="checkbox"]):not([type="radio"]):focus,
+main select:focus,
+main textarea:focus {
+  border-color: rgba(124,58,237,.62) !important;
+  box-shadow: 0 0 0 4px rgba(124,58,237,.10);
+}
+
+/* Keep checkboxes/radios compact. */
+main input[type="checkbox"],
+main input[type="radio"] { accent-color: var(--gate-accent); }
+
+/* Auth screens */
+.gate-auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(124,58,237,.18), transparent 42%),
+    var(--gate-bg);
+}
+
+.gate-auth-card {
+  width: min(100%, 440px);
+  border: 1px solid var(--gate-border) !important;
+  border-radius: 24px !important;
+  background: var(--gate-surface) !important;
+  box-shadow: var(--gate-shadow) !important;
+  backdrop-filter: blur(18px);
+}
+
+.gate-brand-mark {
+  box-shadow: 0 12px 30px rgba(124,58,237,.24);
+}
+
+/* Mobile header */
+.gate-mobile-header {
+  background: rgba(9,13,22,.78) !important;
+  border-color: var(--gate-border) !important;
+  backdrop-filter: blur(18px);
+}
+html:not(.dark) .gate-mobile-header {
+  background: rgba(255,255,255,.82) !important;
+}
+
+/* Reduce accidental layout jumps in images. */
+img { max-width: 100%; }
+
+/* Respect users who prefer less motion. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .gate-main-content { min-height: calc(100vh - 60px); }
+}
+
+
+/* Navigation / sidebar */
+.gate-sidebar {
+  width: 272px !important;
+  border-right-color: var(--gate-border) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.94)) !important;
+  box-shadow: 10px 0 40px rgba(15,23,42,.025);
+}
+html.dark .gate-sidebar {
+  background:
+    linear-gradient(180deg, rgba(9,13,22,.98), rgba(13,18,30,.97)) !important;
+  box-shadow: 12px 0 50px rgba(0,0,0,.16);
+}
+.gate-sidebar nav a {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 13px !important;
+  padding: 11px 13px !important;
+}
+.gate-sidebar nav a:hover:not(.active) {
+  border-color: var(--gate-border);
+  transform: translateX(2px);
+}
+.gate-sidebar nav a.bg-purple-600 {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+  box-shadow: 0 8px 20px rgba(124,58,237,.18);
+}
+.gate-sidebar button {
+  border-radius: 13px;
+}
+.gate-sidebar > div:first-child {
+  background: linear-gradient(180deg, rgba(124,58,237,.025), transparent);
+}
+@media (max-width: 767px) {
+  .gate-sidebar { width: min(86vw, 300px) !important; }
+}
+
+
+/* Typography hierarchy */
+main h1 {
+  letter-spacing: -.025em;
+}
+main h2 {
+  letter-spacing: -.018em;
+}
+main h1, main h2, main h3 {
+  text-wrap: balance;
+}
+
+/* Common list/table polish without changing data rendering. */
+main table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+main th {
+  font-size: .72rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+main tr {
+  transition: background-color .16s ease;
+}
+main tbody tr:hover {
+  background: rgba(124,58,237,.035);
+}
+html.dark main tbody tr:hover {
+  background: rgba(139,92,246,.045);
+}
+
+/* Softer default dividers. */
+main .border-gray-200,
+main .border-zinc-800,
+main .border-zinc-700 {
+  border-color: var(--gate-border);
+}
+
+/* Give the first-level page content a little depth while retaining existing layouts. */
+@media (min-width: 768px) {
+  main .max-w-7xl > * {
+    max-width: 100%;
+  }
+}
+
+/* =========================================================
+   GATE CSE — refined product layer
+   ========================================================= */
+:root {
+  --gate-purple-1: #8b5cf6;
+  --gate-purple-2: #6d28d9;
+  --gate-focus: rgba(139,92,246,.24);
+  --gate-card-radius: 20px;
+}
+
+html.dark {
+  --gate-bg: #080c15;
+  --gate-surface-solid: #101725;
+  --gate-border: rgba(148,163,184,.13);
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 12% -8%, rgba(124,58,237,.075), transparent 30%),
+    radial-gradient(circle at 90% 4%, rgba(59,130,246,.045), transparent 26%);
+}
+
+html.dark body {
+  background-image:
+    radial-gradient(circle at 15% -12%, rgba(124,58,237,.13), transparent 34%),
+    radial-gradient(circle at 90% 0%, rgba(37,99,235,.06), transparent 28%);
+}
+
+/* Slightly more intentional default content surfaces. */
+main .rounded-2xl.border,
+main .rounded-xl.border {
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+main .rounded-2xl.border:hover {
+  border-color: rgba(139,92,246,.16);
+}
+
+/* Premium CTA treatment without changing button semantics. */
+main button.bg-purple-600,
+main a.bg-purple-600 {
+  background-image: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+main button.bg-purple-600:focus-visible,
+main a.bg-purple-600:focus-visible {
+  box-shadow: 0 0 0 4px rgba(139,92,246,.18), 0 10px 26px rgba(109,40,217,.18);
+}
+
+/* History accordion animation. */
+@keyframes gate-collapse-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   Authentication
+   ========================================================= */
+.gate-auth-shell {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(124,58,237,.16), transparent 42%),
+    var(--gate-bg);
+}
+
+.gate-auth-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .28;
+  background-image: linear-gradient(rgba(148,163,184,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.045) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to bottom, black, transparent 75%);
+}
+
+.gate-auth-orb {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: .13;
+}
+
+.gate-auth-orb-one { background: #7c3aed; top: -190px; left: -130px; }
+.gate-auth-orb-two { background: #2563eb; right: -170px; bottom: -220px; }
+
+.gate-auth-frame {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 430px);
+  animation: gate-page-enter .35s cubic-bezier(.22,1,.36,1) both;
+}
+
+.gate-auth-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  margin-bottom: 18px;
+}
+
+.gate-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(139,92,246,.35);
+  border-radius: 13px;
+  background: linear-gradient(135deg, rgba(139,92,246,.98), rgba(109,40,217,.96));
+  color: white;
+  box-shadow: 0 12px 34px rgba(109,40,217,.25);
+}
+
+.gate-brand-mark span {
+  font-size: 18px;
+  font-weight: 850;
+  letter-spacing: -.04em;
+}
+
+.gate-auth-brand-title {
+  margin: 0;
+  color: var(--gate-text);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+
+.gate-auth-brand-subtitle {
+  margin: 2px 0 0;
+  color: var(--gate-muted);
+  font-size: 11px;
+}
+
+.gate-auth-card {
+  position: relative;
+  width: 100%;
+  padding: 30px;
+  border: 1px solid var(--gate-border) !important;
+  border-radius: 24px !important;
+  background: rgba(255,255,255,.78) !important;
+  box-shadow: 0 30px 80px rgba(15,23,42,.12), 0 8px 30px rgba(15,23,42,.06) !important;
+  backdrop-filter: blur(20px);
+}
+
+html.dark .gate-auth-card {
+  background: rgba(15,23,42,.78) !important;
+  box-shadow: 0 30px 80px rgba(0,0,0,.35), 0 8px 30px rgba(0,0,0,.18) !important;
+}
+
+.gate-auth-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 25px;
+}
+
+.gate-auth-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(139,92,246,.18);
+  border-radius: 12px;
+  background: rgba(139,92,246,.10);
+  color: var(--gate-accent);
+}
+
+.gate-auth-heading h1 {
+  margin: 0;
+  color: var(--gate-text);
+  font-size: clamp(1.45rem, 3vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  font-weight: 800;
+}
+
+.gate-auth-heading p {
+  margin: 7px 0 0;
+  color: var(--gate-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.gate-auth-error {
+  margin: 0 0 18px;
+  padding: 11px 13px;
+  border: 1px solid rgba(239,68,68,.22);
+  border-radius: 12px;
+  background: rgba(239,68,68,.07);
+  color: #ef4444;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+html.dark .gate-auth-error { color: #fca5a5; background: rgba(127,29,29,.18); }
+
+.gate-auth-form { display: grid; gap: 17px; }
+
+.gate-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--gate-text);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.gate-input-wrap {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  gap: 10px;
+  padding: 0 13px;
+  border: 1px solid var(--gate-border);
+  border-radius: 13px;
+  background: rgba(248,250,252,.78);
+  color: #94a3b8;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease, transform .18s ease;
+}
+
+html.dark .gate-input-wrap { background: rgba(2,6,23,.36); }
+.gate-input-wrap:focus-within {
+  border-color: rgba(139,92,246,.65);
+  box-shadow: 0 0 0 4px rgba(139,92,246,.10), 0 8px 22px rgba(109,40,217,.06);
+}
+
+.gate-input-wrap input {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  color: var(--gate-text) !important;
+  box-shadow: none !important;
+  font-size: 14px;
+}
+
+.gate-input-wrap input::placeholder { color: #94a3b8; }
+.gate-password-toggle {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  margin-right: -6px;
+  border-radius: 9px;
+  color: #94a3b8;
+}
+.gate-password-toggle:hover { background: rgba(148,163,184,.10); color: var(--gate-text); }
+
+.gate-password-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 7px;
+  color: var(--gate-muted);
+  font-size: 11px;
+}
+.gate-password-hint svg { color: #22c55e; }
+
+.gate-auth-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+  border: 1px solid rgba(139,92,246,.2);
+  border-radius: 13px;
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color: white;
+  font-size: 14px;
+  font-weight: 750;
+  box-shadow: 0 10px 25px rgba(109,40,217,.20);
+}
+.gate-auth-submit:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(109,40,217,.27); filter: brightness(1.04); }
+.gate-auth-submit:active:not(:disabled) { transform: translateY(1px); }
+.gate-auth-submit:disabled { cursor: not-allowed; opacity: .58; }
+
+.gate-button-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255,255,255,.38);
+  border-top-color: white;
+  border-radius: 999px;
+  animation: gate-spin .7s linear infinite;
+}
+@keyframes gate-spin { to { transform: rotate(360deg); } }
+
+.gate-auth-switch {
+  margin: 21px 0 0;
+  color: var(--gate-muted);
+  text-align: center;
+  font-size: 12px;
+}
+.gate-auth-switch a { color: var(--gate-accent); font-weight: 700; }
+.gate-auth-switch a:hover { color: var(--gate-accent-strong); }
+
+@media (max-width: 520px) {
+  .gate-auth-shell { align-items: flex-start; padding: 28px 15px 36px; overflow-y: auto; }
+  .gate-auth-frame { margin: auto 0; }
+  .gate-auth-card { padding: 23px 18px; border-radius: 20px !important; }
+  .gate-auth-heading { margin-bottom: 21px; }
+  .gate-auth-brand { margin-bottom: 14px; }
+  .gate-auth-orb { transform: scale(.72); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gate-auth-frame, .gate-button-spinner { animation: none !important; }
+}
+
+
+/* =========================================================
+   GATE CSE 2.0 — product polish
+   ========================================================= */
+
+/* Keep the content column aligned with the widened sidebar. */
+.gate-main-content {
+  padding-left: clamp(16px, 2vw, 32px);
+  padding-right: clamp(16px, 2vw, 32px);
+}
+
+/* A restrained elevation system for the existing page cards. */
+main .rounded-2xl.border {
+  background: var(--gate-surface-solid);
+  box-shadow: 0 12px 32px rgba(15,23,42,.045);
+}
+html.dark main .rounded-2xl.border {
+  box-shadow: 0 16px 42px rgba(0,0,0,.16);
+}
+
+main .rounded-2xl.border:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(15,23,42,.07);
+  border-color: rgba(139,92,246,.22);
+}
+html.dark main .rounded-2xl.border:hover {
+  box-shadow: 0 18px 46px rgba(0,0,0,.23);
+}
+
+/* Don't lift dense containers or data tables. */
+main .overflow-hidden.rounded-2xl.border:hover,
+main table.rounded-2xl:hover {
+  transform: none;
+}
+
+/* Consistent primary action language across the app. */
+main a.bg-purple-600,
+main button.bg-purple-600 {
+  min-height: 44px;
+  border: 1px solid rgba(139,92,246,.18);
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 48%, #6d28d9 100%);
+}
+
+/* Progress bars get a little more depth without changing values. */
+main .bg-purple-600.rounded-full,
+main .bg-gradient-to-r.from-purple-500 {
+  box-shadow: 0 0 18px rgba(124,58,237,.18);
+}
+
+/* Sidebar brand + countdown */
+.gate-sidebar {
+  width: 272px !important;
+}
+.gate-sidebar > div:first-child {
+  padding: 22px 18px !important;
+}
+.gate-sidebar nav {
+  padding: 14px !important;
+}
+.gate-sidebar nav a {
+  min-height: 44px;
+  font-size: 13px;
+}
+.gate-sidebar nav a.bg-purple-600 {
+  position: relative;
+  overflow: hidden;
+}
+.gate-sidebar nav a.bg-purple-600::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent);
+  transform: translateX(-120%);
+  transition: transform .45s ease;
+}
+.gate-sidebar nav a.bg-purple-600:hover::after {
+  transform: translateX(120%);
+}
+
+.gate-sidebar > div:first-child > div:nth-child(2) {
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(139,92,246,.16), transparent 55%),
+    rgba(139,92,246,.07) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* Active timer mini-widget */
+.gate-sidebar .font-mono {
+  letter-spacing: -.03em;
+}
+
+/* Mobile shell */
+@media (max-width: 767px) {
+  .gate-main-content {
+    padding: 14px;
+  }
+
+  .gate-mobile-header {
+    height: 60px;
+    box-shadow: 0 8px 25px rgba(15,23,42,.05);
+  }
+
+  html:not(.dark) .gate-mobile-header .text-white {
+    color: #111827 !important;
+  }
+
+  html:not(.dark) .gate-mobile-header .text-zinc-500 {
+    color: #667085 !important;
+  }
+}
+
+/* Better focus/hover treatment for the main controls. */
+main button:not(:disabled):hover,
+main a:hover {
+  transition-duration: .18s;
+}
+
+main input::placeholder,
+main textarea::placeholder {
+  opacity: .72;
+}
+
+/* Dense analytics surfaces stay readable on narrow screens. */
+@media (max-width: 640px) {
+  main h1 {
+    font-size: clamp(1.45rem, 7vw, 2rem);
+  }
+
+  main h2 {
+    font-size: clamp(1rem, 5vw, 1.2rem);
+  }
+
+  main .rounded-2xl.border {
+    border-radius: 16px;
+  }
+}
+
+/* Skeleton utility for future data surfaces. */
+.gate-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(148,163,184,.12);
+  border-radius: 10px;
+}
+.gate-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.20), transparent);
+  animation: gate-skeleton-shimmer 1.35s ease-in-out infinite;
+}
+@keyframes gate-skeleton-shimmer {
+  to { transform: translateX(100%); }
+}
+html.dark .gate-skeleton {
+  background: rgba(148,163,184,.09);
+}
+html.dark .gate-skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.07), transparent);
+}
+
+/* Dialogs already present in pages get a cohesive surface. */
+.fixed[class*="backdrop-blur"] > .rounded-2xl,
+.fixed[class*="backdrop-blur"] > .rounded-3xl {
+  box-shadow: 0 30px 90px rgba(0,0,0,.30);
+}
+
+/* Avoid hover transforms for reduced-motion users. */
+@media (prefers-reduced-motion: reduce) {
+  main .rounded-2xl.border:hover {
+    transform: none;
+  }
+  .gate-sidebar nav a.bg-purple-600::after {
+    display: none;
+  }
+}
+
+/* =========================================================
+   GATE CSE — micro-interactions: timer, live indicators,
+   skeleton loading
+   ========================================================= */
+
+/* Big timer digits: a calm breathing glow while a session is
+   actively running, plus a quick "tick" pop whenever the
+   displayed value changes (triggered by remounting via key). */
+.gate-timer-digits {
+  display: inline-block;
+  transition: text-shadow .3s ease;
+}
+
+.gate-timer-digits.gate-timer-live {
+  text-shadow: 0 0 26px rgba(139,92,246,.38);
+  animation: gate-timer-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes gate-timer-breathe {
+  0%, 100% { text-shadow: 0 0 18px rgba(139,92,246,.28); }
+  50% { text-shadow: 0 0 34px rgba(139,92,246,.48); }
+}
+
+.gate-timer-tick {
+  display: inline-block;
+  animation: gate-timer-tick .32s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes gate-timer-tick {
+  from { opacity: .55; transform: translateY(2px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* The card that hosts the timer glows softly at its edges while running. */
+.gate-timer-card-live {
+  position: relative;
+}
+.gate-timer-card-live::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(139,92,246,.16), 0 0 46px rgba(139,92,246,.14);
+  animation: gate-card-glow 2.4s ease-in-out infinite;
+}
+@keyframes gate-card-glow {
+  0%, 100% { opacity: .65; }
+  50% { opacity: 1; }
+}
+
+/* Small "live" status dot used next to running-timer labels. */
+.gate-live-dot {
+  position: relative;
+  display: inline-flex;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--gate-accent);
+  flex: 0 0 auto;
+}
+.gate-live-dot::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 999px;
+  background: var(--gate-accent);
+  opacity: .45;
+  animation: gate-live-ping 1.8s cubic-bezier(0,0,.2,1) infinite;
+}
+@keyframes gate-live-ping {
+  0% { transform: scale(.6); opacity: .55; }
+  75%, 100% { transform: scale(1.9); opacity: 0; }
+}
+
+/* Skeleton rows: same shimmer as .gate-skeleton, sized as list rows. */
+.gate-skeleton-row {
+  height: 16px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gate-timer-digits.gate-timer-live,
+  .gate-timer-tick,
+  .gate-timer-card-live::before,
+  .gate-live-dot::after {
+    animation: none !important;
+  }
+  .gate-timer-digits.gate-timer-live {
+    text-shadow: 0 0 20px rgba(139,92,246,.32);
+  }
+}
+
+
+
+/* Strong Zen Mode blur: intentionally obscures the timer digits while keeping the timer running normally. */
+.gate-zen-blur {
+  filter: blur(28px);
+  opacity: .42;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .gate-zen-blur {
+    filter: blur(34px);
+    opacity: .32;
+  }
+}
+
+/* Timer landscape support: follows the device/browser orientation when
+   mobile auto-rotate is enabled. No manual rotation state is required. */
+@media (max-width: 767px) and (orientation: landscape) {
+  .timer-landscape-content {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .timer-landscape-content .gate-timer-digits {
+    font-size: clamp(3.5rem, 18vw, 8rem);
+    line-height: 1;
+  }
+
+  .timer-landscape-content .timer-action-row {
+    margin-top: 1rem;
+  }
+}
+
+/* =========================================================
+   Mobile landscape polish
+   - Applies only to phones/tablets below 768px.
+   - Desktop/laptop layouts are intentionally untouched.
+   ========================================================= */
+@media (max-width: 767px) and (orientation: landscape) {
+  html, body, #root {
+    min-height: 100%;
+  }
+
+  .gate-mobile-header {
+    height: 50px !important;
+    min-height: 50px !important;
+    padding: 0 10px !important;
+    z-index: 60 !important;
+  }
+
+  .gate-mobile-header .ml-auto {
+    gap: 4px !important;
+    padding: 4px 7px !important;
+  }
+
+  .gate-mobile-header .ml-auto p:first-child {
+    font-size: 8px !important;
+  }
+
+  .gate-mobile-header .ml-auto p:last-child {
+    font-size: 7px !important;
+  }
+
+  .gate-mobile-header > div.ml-3 {
+    margin-left: 7px !important;
+  }
+
+  .gate-mobile-header > div.ml-3 h1 {
+    font-size: 13px !important;
+    line-height: 1.1 !important;
+  }
+
+  .gate-mobile-header > div.ml-3 p {
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Keep the drawer easy to reach and independently scrollable. */
+  .gate-sidebar {
+    width: min(82vw, 310px) !important;
+    max-height: 100dvh !important;
+    height: 100dvh !important;
+    z-index: 70 !important;
+  }
+
+  .gate-sidebar nav {
+    min-height: 0;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gate-sidebar > div:first-child {
+    flex-shrink: 0;
+  }
+
+  .gate-main-content {
+    min-height: calc(100dvh - 50px) !important;
+    padding: 10px !important;
+  }
+
+  /* Compact the page header so the content has usable landscape height. */
+  main h1 {
+    font-size: 1.25rem !important;
+  }
+
+  /* Timer: use the extra width instead of stacking everything vertically. */
+  .timer-landscape-content {
+    min-height: 0 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .timer-landscape-content > div {
+    padding-top: 2.5rem !important;
+  }
+
+  .timer-landscape-content .gate-timer-digits {
+    font-size: clamp(3rem, 13vw, 6.5rem) !important;
+    line-height: .95 !important;
+    letter-spacing: -.045em;
+  }
+
+  .timer-landscape-content .timer-action-row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: min(100%, 520px);
+    margin: .7rem auto 0 !important;
+    gap: .45rem !important;
+  }
+
+  .timer-landscape-content .timer-action-row > button {
+    min-width: 0 !important;
+    flex: 1 1 0 !important;
+    min-height: 40px !important;
+    padding: .55rem .7rem !important;
+    font-size: .75rem !important;
+  }
+
+  /* Don't let the top controls consume the whole landscape timer. */
+  .timer-landscape-content ~ * {
+    max-width: 100%;
+  }
+
+  /* Timer card controls remain in one tidy row and never cover the digits. */
+  .timer-landscape-content {
+    padding-top: 0 !important;
+  }
+
+  .timer-landscape-content .gate-timer-live {
+    margin-top: 0;
+  }
+
+  /* Keep the timer card compact in landscape; fullscreen retains its own layout. */
+  .gate-timer-card-live,
+  [class*="rounded-2xl"][class*="shadow-2xl"] {
+    max-height: none;
+  }
+
+  /* Subject/topic controls sit side-by-side in landscape. */
+  main .mb-5.grid.grid-cols-1,
+  main .mb-5.grid.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: .5rem !important;
+  }
+
+  /* The timer mode switcher remains compact and reachable. */
+  main .mb-5.grid.grid-cols-2 > button {
+    min-height: 38px !important;
+    padding-top: .45rem !important;
+    padding-bottom: .45rem !important;
+  }
+
+  /* General cards should not consume the entire short landscape viewport. */
+  main .rounded-2xl {
+    border-radius: 15px;
+  }
+}
+
+@media (max-width: 767px) and (orientation: landscape) and (max-height: 430px) {
+  .gate-mobile-header {
+    height: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .gate-main-content {
+    min-height: calc(100dvh - 44px) !important;
+    padding: 8px !important;
+  }
+
+  .timer-landscape-content .gate-timer-digits {
+    font-size: clamp(2.7rem, 12vw, 5.25rem) !important;
+  }
+
+  .timer-landscape-content .timer-action-row > button {
+    min-height: 36px !important;
+    padding: .4rem .55rem !important;
+  }
+
+  .timer-landscape-content > div {
+    padding-top: 2.1rem !important;
+  }
+
+  /* Make the drawer comfortably usable even on short landscape phones. */
+  .gate-sidebar {
+    width: min(84vw, 300px) !important;
+  }
+}
